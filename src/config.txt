@@ -1,0 +1,103 @@
+# ************* Simulation Parameters ***********************************
+#     TAG                   DESCRIPTION
+# delay=                in ms, the speed of the simulation graphics
+# maxIteration=         when set to 0, means infinite.
+# maxHeight=            Height of the world graphics window
+# maxWidth=             Width of the world graphics window
+# displayModel=         At each iteration the model is printed to stdout
+# displayInteraction=   displays the simulator loop count to stdout
+# ***********************************************************************
+
+delay= 100
+maxIteration= 50000
+maxHeight= 500
+maxWidth= 1000
+displayModel= no
+displayIteration= yes
+
+# ************ Agent parameters ***********************************************
+# ROBOT SYNTAX
+# robot= ID x_coord y_coord width height direction aiType knowledgeBaseFilename
+# ant= ID x-coord y-coord width height direction aiType
+# *****************************************************************************
+
+ant= name1 170 370 1 1 north sometimesRandom
+ant= name2 170 370 1 1 north sometimesRandom
+ant= name3 170 370 1 1 north sometimesRandom
+ant= name4 170 370 1 1 north sometimesRandom
+ant= name5 170 370 1 1 north sometimesRandom
+ant= name6 170 370 1 1 north sometimesRandom
+ant= name7 170 370 1 1 north sometimesRandom
+ant= name8 170 370 1 1 north sometimesRandom
+ant= name9 170 370 1 1 north sometimesRandom
+ant= name10 170 370 1 1 north sometimesRandom
+ant= name11 170 370 1 1 north sometimesRandom
+ant= name12 170 370 1 1 north sometimesRandom
+ant= name13 170 370 1 1 north sometimesRandom
+ant= name14 170 370 1 1 north sometimesRandom
+ant= name15 170 370 1 1 north sometimesRandom
+ant= name16 170 370 1 1 north sometimesRandom
+ant= name17 170 370 1 1 north sometimesRandom
+ant= name18 170 370 1 1 north sometimesRandom
+ant= name19 170 370 1 1 north sometimesRandom
+ant= name20 170 370 1 1 north sometimesRandom
+ant= name21 170 370 1 1 north sometimesRandom
+ant= name22 170 370 1 1 north sometimesRandom
+ant= name23 170 370 1 1 north sometimesRandom
+ant= name24 170 370 1 1 north sometimesRandom
+ant= name25 170 370 1 1 north sometimesRandom
+ant= name26 170 370 1 1 north sometimesRandom
+ant= name27 170 370 1 1 north sometimesRandom
+ant= name28 170 370 1 1 north sometimesRandom
+ant= name29 170 370 1 1 north sometimesRandom
+ant= name30 170 370 1 1 north sometimesRandom
+ant= name31 170 370 1 1 north sometimesRandom
+ant= name32 170 370 1 1 north sometimesRandom
+ant= name33 170 370 1 1 north sometimesRandom
+ant= name34 170 370 1 1 north sometimesRandom
+ant= name35 170 370 1 1 north sometimesRandom
+ant= name36 170 370 1 1 north sometimesRandom
+ant= name37 170 370 1 1 north sometimesRandom
+ant= name38 170 370 1 1 north sometimesRandom
+ant= name39 170 370 1 1 north sometimesRandom
+ant= name40 170 370 1 1 north sometimesRandom
+ant= name41 170 370 1 1 north sometimesRandom
+ant= name42 170 370 1 1 north sometimesRandom
+ant= name43 170 370 1 1 north sometimesRandom
+ant= name44 170 370 1 1 north sometimesRandom
+ant= name45 170 370 1 1 north sometimesRandom
+ant= name46 170 370 1 1 north sometimesRandom
+ant= name47 170 370 1 1 north sometimesRandom
+ant= name48 170 370 1 1 north sometimesRandom
+ant= name49 170 370 1 1 north sometimesRandom
+ant= name50 170 370 1 1 north sometimesRandom
+
+
+# ********************* Foods *****************************************
+food= food1 220 25 10 30
+
+# ********************* Home *****************************************
+home= home1 180 360 100 15
+
+# ********************* Objects *****************************************
+# object= circle x y x_width y_width
+# object= rect x y x_end y_end
+# ***********************************************************************
+
+# Boundary walls
+object= rect 0 0 20 400  # Left boundary
+object= rect 0 0 500 20  # Top boundary
+object= rect 0 380 500 20  # Bottom boundary
+object= rect 480 0 20 400  # Right boundary
+
+object= rect 20 190 200 20   # middle boundary left
+object= rect 240 190 240 20  # middle boundary right
+
+object= rect 100 230 330 100 # Bottom divider
+object= rect 50 70 330 100   # top divider
+
+object= rect 20 360 120 30  # nest wall left
+object= rect 320 360 180 30 # nest wall right
+
+object= rect 20 20 120 30  # forage wall left
+object= rect 320 20 180 30 # forage wall right
