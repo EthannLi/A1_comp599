@@ -8,7 +8,7 @@
 # displayInteraction=   displays the simulator loop count to stdout
 # ***********************************************************************
 
-delay= 100
+delay= 500
 maxIteration= 50000
 maxHeight= 500
 maxWidth= 1000
@@ -74,7 +74,7 @@ ant= name50 170 370 1 1 north sometimesRandom
 
 
 # ********************* Foods *****************************************
-food= food1 220 25 10 30
+food= food1 230 60 2 150
 
 # ********************* Home *****************************************
 home= home1 180 360 100 15

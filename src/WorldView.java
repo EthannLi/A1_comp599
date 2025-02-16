@@ -1,7 +1,6 @@
 import BasicAI.AITuple;
 import main.Cell;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.geom.Ellipse2D;
@@ -393,15 +392,15 @@ public class WorldView {
                             wm.leavePheromone(o, tuple.PheromoneType, tuple.iValue);
                             break;
                         }
-                        case "EAT" -> {
+                        case "#EAT" -> {
                             wm.antEat(o);
                             break;
                         }
-                        case "PICKUPFOOD" -> {
+                        case "#PICKUPFOOD" -> {
                             wm.antPickupFood(o);
                             break;
                         }
-                        case "DROPFOOD" -> {
+                        case "#DROPFOOD" -> {
                             wm.antDropFood(o);
                             break;
                         }
@@ -449,7 +448,7 @@ public class WorldView {
         }
 
         private void drawPheromones(Graphics g) {
-            
+
             // Loop through each cell in the model grid
             for (int i = 0; i < wm.modelWidth; i++) {
                 for (int j = 0; j < wm.modelHeight; j++) {
@@ -625,7 +624,8 @@ public class WorldView {
                     // Draw the battery outline
                     g.setColor(Color.magenta);
                     g.drawRect(batteryX, batteryY, batteryWidth, batteryHeight);
-                    System.out.println("Battery: " + wo.ant.getCurrentEnergy() + " / " + wo.ant.getEnergyCapacity());
+                    // System.out.println("Battery: " + wo.ant.getCurrentEnergy() + " / " +
+                    // wo.ant.getEnergyCapacity());
                     // Fill based on current battery level
                     int fillWidth = (int) (batteryWidth
                             * ((double) wo.ant.getCurrentEnergy() / wo.ant.getEnergyCapacity()));
@@ -656,7 +656,7 @@ public class WorldView {
                                     g.drawLine(wo.ant.startX, wo.ant.startY, wo.ant.endX, wo.ant.endY);
                                     break;
                                 default:
-                                    System.out.println("No action for: " + wo.ant.displayType);
+                                    // System.out.println("No action for: " + wo.ant.displayType);
                                     break;
                             }
                         }

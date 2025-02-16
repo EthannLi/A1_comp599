@@ -39,7 +39,7 @@ public class AISometimesRandom implements AIProcedure {
     public ArrayList<AITuple> think(int depth, ArrayList<AITuple> inputData) throws Exception {
         ArrayList<AITuple> result = new ArrayList<>();
         int[] boundary = boundaryCheck(inputData);
-        int step_size = 20;
+        int step_size = 15;
         if(boundary[1] == 1 && boundary[0] == 1) {
             System.out.println("Boundary detected");
             int turnDegree = random.nextBoolean() ? 90 : 270;
@@ -69,14 +69,21 @@ public class AISometimesRandom implements AIProcedure {
             return result;
         }
         // Default probabilistic actions:
-        double pFollow = 0.6; // probability to follow pheromone gradient
+        double pFollow = 0.6;
         int maxPheroCell = -1;
         int maxPheroVal = 0;
+        int maxPheroFoodIndex = -1;
+        int maxPheroFoodVal = 0;
         // Search for strongest pheromone (assume TO_FOOD for SEARCHING, TO_HOME for RETURNING)
+        // Also search for FOOD since the food also has a pheromone
         for (AITuple tuple: inputData) {
             if(tuple.category.equals("sensor")) {
                 for (int i = 0; i < tuple.Cells.length; i++) {
                     int[] pheros = tuple.Cells[i].getPheromone();
+                    if(pheros[main.PheromoneType.FOOD.ordinal()] > maxPheroFoodVal) {
+                        maxPheroFoodVal = pheros[main.PheromoneType.FOOD.ordinal()];
+                        maxPheroFoodIndex = i;
+                    }
                     int index = (state == State.SEARCHING) ? main.PheromoneType.TO_FOOD.ordinal() : main.PheromoneType.TO_HOME.ordinal();
                     if(pheros[index] > maxPheroVal) {
                         maxPheroVal = pheros[index];
@@ -87,41 +94,60 @@ public class AISometimesRandom implements AIProcedure {
         }
         if(counter > 100) {
             System.out.println("Counter reset");
-            if (maxPheroCell != -1 && random.nextDouble() < pFollow) {
-                // Follow pheromone gradient:
-                System.out.println("---------------------------------------Following pheromone---------------------------------------");
-                if (maxPheroCell == 1) { // forward cell
-                    result.add(new AITuple("actuator", "#FORWARD", step_size));
-                } else {
-                    // Turn left if cell index 0; right if index 2.
-                    int turnDegree = (maxPheroCell == 0) ? 270 : 90;
-                    result.add(new AITuple("actuator", "#TURN", turnDegree));
-                    updateFacing(turnDegree);
-                    result.add(new AITuple("actuator", "#FORWARD", step_size));
+            double chance = random.nextDouble();
+            if((maxPheroFoodIndex != -1 || maxPheroCell != -1) && chance > pFollow) {
+                if (maxPheroCell != -1 && random.nextDouble() < pFollow ) {
+                    // Follow pheromone gradient:
+                    System.out.println("---------------------------------------Following pheromone---------------------------------------");
+                    if (maxPheroCell == 1) { // forward cell
+                        result.add(new AITuple("actuator", "#FORWARD", step_size));
+                    } else {
+                        // Turn left if cell index 0; right if index 2.
+                        int turnDegree = (maxPheroCell == 0) ? 270 : 90;
+                        result.add(new AITuple("actuator", "#TURN", turnDegree));
+                        updateFacing(turnDegree);
+                        result.add(new AITuple("actuator", "#FORWARD", step_size));
+                    }
+                } else if(maxPheroFoodIndex != -1 && state == State.SEARCHING) {
+                    // Follow pheromone gradient to food:
+                    System.out.println("---------------------------------------Following pheromone to food---------------------------------------");
+                    if(maxPheroFoodIndex == 1) { // forward cell
+                        result.add(new AITuple("actuator", "#FORWARD", step_size));
+                    }else{
+                        // Turn left if cell index 0; right if index 2.
+                        int turnDegree = (maxPheroFoodIndex == 0) ? 270 : 90;
+                        result.add(new AITuple("actuator", "#TURN", turnDegree));
+                        updateFacing(turnDegree);
+                        result.add(new AITuple("actuator", "#FORWARD", step_size));
+                    }
+
                 }
             } else {
                 // Randomized action for swarm behavior:
                 double randVal = random.nextDouble();
-                if (randVal < 0.3) {
-                    // Random turn only
-                    int turnDegree = random.nextBoolean() ? 90 : 270;
-                    result.add(new AITuple("actuator", "#TURN", turnDegree));
-                    updateFacing(turnDegree);
-                } else if (randVal < 0.7) {
-                    // Move forward without turning
-                    result.add(new AITuple("actuator", "#FORWARD", step_size));
+                if (randVal < 0.2) {
+                    if(state ==State.SEARCHING && facing != 0) {
+                        // Calculate minimal positive turn from current facing to north.
+                        int turnDegree = (4 - facing) * 90; // e.g. if facing 1 (east), turn 270 to reach north.
+                        result.add(new AITuple("actuator", "#TURN", turnDegree));
+                        updateFacing(turnDegree);
+                    }else if(state == State.RETURNING && facing != 2) {
+                        // Calculate minimal positive turn from current facing to south.
+                        int turnDegree = (2 - facing) * 90; // e.g. if facing 1 (east), turn 180 to reach south.
+                        result.add(new AITuple("actuator", "#TURN", turnDegree));
+                        updateFacing(turnDegree);
+                    }
                 } else {
-                    // Random turn then forward
-                    int turnDegree = random.nextBoolean() ? 90 : 270;
-                    result.add(new AITuple("actuator", "#TURN", turnDegree));
-                    updateFacing(turnDegree);
+                    // Move forward without turning
                     result.add(new AITuple("actuator", "#FORWARD", step_size));
                 }
                 // Leave pheromone based on state:
-                if (state == State.SEARCHING)
+                if (state == State.SEARCHING) {
                     result.add(new AITuple("sensor", "#LEAVEPHEROMONE", PheromoneType.TO_FOOD, 10));
-                else
+                }
+                else {
                     result.add(new AITuple("sensor", "#LEAVEPHEROMONE", main.PheromoneType.TO_HOME, 10));
+                }
             }
         }else{
             counter++;
@@ -190,6 +216,7 @@ public class AISometimesRandom implements AIProcedure {
         }
         return new int[]{-1, 0};
     }
+
 
     public int[] nestCheck(ArrayList<AITuple> inputData) {
         for (AITuple tuple: inputData) {

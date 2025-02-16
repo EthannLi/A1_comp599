@@ -89,9 +89,10 @@ public class ConfigFileReader {
                 data5 = fileReader.next();
                 data6 = fileReader.next();
                 data7 = fileReader.next();
-                // objects.add(new WorldObject(token, data1, Integer.parseInt(data2), Integer.parseInt(data3),
-                //         Integer.parseInt(data4), Integer.parseInt(data5), Integer.parseInt(data6),
-                //         Integer.parseInt(data7)));
+                // objects.add(new WorldObject(token, data1, Integer.parseInt(data2),
+                // Integer.parseInt(data3),
+                // Integer.parseInt(data4), Integer.parseInt(data5), Integer.parseInt(data6),
+                // Integer.parseInt(data7)));
             } else if (token.equals("food=") || token.equals("home=")) {
                 System.out.println("food or home");
                 data1 = fileReader.next();
@@ -107,11 +108,54 @@ public class ConfigFileReader {
                 data3 = fileReader.next();
                 data4 = fileReader.next();
                 data5 = fileReader.next();
-                objects.add(new WorldObject( data1, "obstacle", Integer.parseInt(data2), Integer.parseInt(data3),
+                objects.add(new WorldObject(data1, "obstacle", Integer.parseInt(data2), Integer.parseInt(data3),
                         Integer.parseInt(data4), Integer.parseInt(data5), "n/a", "n/a", "n/a"));
+            } else if (token.equals("mant=")) {
+                int homeX = 0, homeY = 0, homeXEnd = 0, homeYEnd = 0;
+                boolean homeFound = false;
 
+                for (WorldObject object : objects) {
+                    if (object.shape.equals("home=")) {
+                        homeX = object.xCoord;
+                        homeY = object.yCoord;
+                        homeXEnd = homeX + object.xEnd;
+                        homeYEnd = homeY + object.yEnd;
+                        homeFound = true;
+                        break;
+                    }
+                }
+
+                if (!homeFound) {
+                    System.out.println("Config file token error: " + token + " No home object found before mant");
+                    System.exit(0);
+                }
+
+                data1 = fileReader.next();
+                int numAnts = Integer.parseInt(data1);
+                int totalHomeSpace = (homeXEnd - homeX) * (homeYEnd - homeY);
+
+                if (numAnts > totalHomeSpace) {
+                    System.out.println("Too many ants for the home location");
+                    System.exit(0);
+                }
+
+                int currentX = homeX;
+                int currentY = homeY;
+
+                for (int i = 0; i < numAnts; i++) {
+                    objects.add(
+                            new WorldObject("ant=", "ant" + i, currentX, currentY, 1, 1, "north", "sometimesRandom"));
+                    System.out.println("ant" + i + " " + currentX + " " + currentY);
+                    // Move to the next position
+                    currentX++;
+                    if (currentX >= homeXEnd) { // If we reach the end of the row, move to the next row
+                        currentX = homeX;
+                        currentY++;
+                    }
+                }
             } else {
                 System.out.println("Config file token error: " + token);
+                System.exit(0);
             }
 
         }

@@ -270,28 +270,28 @@ public class WorldModel {
         int i;
         int xDiff = 0, yDiff = 0;
         int xNext, yNext;
-        int xBoundBox, yBoundBox;
+        // int xBoundBox, yBoundBox;
 
         if (o.direction.equals("north")) {
             xDiff = 0;
             yDiff = -1;
-            xBoundBox = 0;
-            yBoundBox = -1;
+            // xBoundBox = 0;
+            // yBoundBox = -1;
         } else if (o.direction.equals("south")) {
             xDiff = 0;
             yDiff = 1;
-            xBoundBox = 0;
-            yBoundBox = o.yEnd + 1;
+            // xBoundBox = 0;
+            // yBoundBox = o.yEnd + 1;
         } else if (o.direction.equals("east")) {
             xDiff = 1;
             yDiff = 0;
-            xBoundBox = o.xEnd + 1;
-            yBoundBox = 0;
+            // xBoundBox = o.xEnd + 1;
+            // yBoundBox = 0;
         } else if (o.direction.equals("west")) {
             xDiff = -1;
             yDiff = 0;
-            xBoundBox = -1;
-            yBoundBox = 0;
+            // xBoundBox = -1;
+            // yBoundBox = 0;
         } else
             throw new Exception("FORWARD: direction wrong - " + o.direction);
 
@@ -304,6 +304,12 @@ public class WorldModel {
             if (yNext < WorldModel.titleBarWidth || yNext > this.modelHeight)
                 break;
 
+            // if (isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(),
+            // this.background)
+            // || isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(),
+            // Color.green)
+            // || isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(),
+            // Color.red)) {
             if (isColorEqual(this.model[xNext][yNext].getColor(), this.background)
                     || isColorEqual(this.model[xNext][yNext].getColor(), Color.green)
                     || isColorEqual(this.model[xNext][yNext].getColor(), Color.red)) {
@@ -329,28 +335,28 @@ public class WorldModel {
         int i;
         int xDiff = 0, yDiff = 0;
         int xNext, yNext;
-        int xBoundBox, yBoundBox;
+        // int xBoundBox, yBoundBox;
 
         if (o.direction.equals("north")) {
             xDiff = 0;
             yDiff = 1;
-            xBoundBox = 0;
-            yBoundBox = o.yEnd + 1;
+            // xBoundBox = 0;
+            // yBoundBox = o.yEnd + 1;
         } else if (o.direction.equals("south")) {
             xDiff = 0;
             yDiff = -1;
-            xBoundBox = 0;
-            yBoundBox = -1;
+            // xBoundBox = 0;
+            // yBoundBox = -1;
         } else if (o.direction.equals("east")) {
             xDiff = -1;
             yDiff = 0;
-            xBoundBox = -1;
-            yBoundBox = 0;
+            // xBoundBox = -1;
+            // yBoundBox = 0;
         } else if (o.direction.equals("west")) {
             xDiff = 1;
             yDiff = 0;
-            xBoundBox = o.xEnd + 1;
-            yBoundBox = 0;
+            // xBoundBox = o.xEnd + 1;
+            // yBoundBox = 0;
         } else
             throw new Exception("REVERSE: direction wrong - " + o.direction);
 
@@ -363,9 +369,9 @@ public class WorldModel {
             if (yNext < WorldModel.titleBarWidth || yNext > this.modelHeight)
                 break;
 
-            if (isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(), this.background)
-                    || isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(), Color.green)
-                    || isColorEqual(this.model[xNext + xBoundBox][yNext + yBoundBox].getColor(), Color.red)) {
+            if (isColorEqual(this.model[xNext][yNext].getColor(), this.background)
+                    || isColorEqual(this.model[xNext][yNext].getColor(), Color.green)
+                    || isColorEqual(this.model[xNext][yNext].getColor(), Color.red)) {
                 o.xCoord = xNext;
                 o.yCoord = yNext;
             }
@@ -450,17 +456,17 @@ public class WorldModel {
                     + " is less than requirement " + energyCost);
         }
         if (o.direction.equals("north")) {
-            cells[0] = model[o.xCoord - 1][o.yCoord - 1]; // left
-            cells[1] = model[o.xCoord][o.yCoord - 1];   // front
-            cells[2] = model[o.xCoord + 1][o.yCoord - 1]; // right
+            cells[0] = model[o.xCoord - 1][o.yCoord - 1];
+            cells[1] = model[o.xCoord][o.yCoord - 1];
+            cells[2] = model[o.xCoord + 1][o.yCoord - 1];
         } else if (o.direction.equals("south")) {
-            cells[1] = model[o.xCoord][o.yCoord + 1]; // front
-            cells[0] = model[o.xCoord - 1][o.yCoord + 1]; // left
-            cells[2] = model[o.xCoord + 1][o.yCoord + 1]; // right
+            cells[1] = model[o.xCoord][o.yCoord + 1];
+            cells[0] = model[o.xCoord - 1][o.yCoord + 1];
+            cells[2] = model[o.xCoord + 1][o.yCoord + 1];
         } else if (o.direction.equals("east")) {
-            cells[1] = model[o.xCoord + 1][o.yCoord]; // front
-            cells[0] = model[o.xCoord + 1][o.yCoord - 1];   // left
-            cells[2] = model[o.xCoord + 1][o.yCoord + 1];   // right
+            cells[1] = model[o.xCoord + 1][o.yCoord];
+            cells[0] = model[o.xCoord + 1][o.yCoord - 1];
+            cells[2] = model[o.xCoord + 1][o.yCoord + 1];
         } else if (o.direction.equals("west")) {
             cells[1] = model[o.xCoord - 1][o.yCoord];
             cells[0] = model[o.xCoord - 1][o.yCoord + 1];
@@ -509,8 +515,9 @@ public class WorldModel {
         model[o.xCoord][o.yCoord].addPheromone(type, amount);
 
         // Spread the pheromone only for HELP_ME or DANGER types
-        if (type == main.PheromoneType.HELP_ME || type == main.PheromoneType.DANGER || type == main.PheromoneType.FOOD
-                || type == main.PheromoneType.HOME || type == PheromoneType.TO_FOOD || type == PheromoneType.TO_HOME) {
+        if (type == main.PheromoneType.HELP_ME || type == main.PheromoneType.DANGER ||
+                type == main.PheromoneType.FOOD || type == main.PheromoneType.HOME ||
+                type == PheromoneType.TO_FOOD || type == PheromoneType.TO_HOME) {
             // Define the maximum radius of diffusion
             int radius = 3;
 
