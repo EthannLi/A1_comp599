@@ -39,18 +39,58 @@ public class AISometimesRandom implements AIProcedure {
 
     public ArrayList<AITuple> think(int depth, ArrayList<AITuple> inputData) throws Exception {
         ArrayList<AITuple> result = new ArrayList<>();
+        // bias go up
+        /*
+            - if ant is carrying food
+                - if ant is on the nest drop food
+                - if ant is not on the nest move towards the nest
+            - if ant is not carrying food
+                - if ant is on food pick up food
+                - if ant is not on food move towards food
+
+            follow pheromone
+                - if pheromone move in that direction
+            if no pheromone move random direction with bias to go up
+
+            when encountering a wall turn
+                - Depending on the ant facing turn certain direction
+                    - if ant faces north/south and hits a wall turn west or east
+                    - if ant faces west/east and hits a wall turn north or south
+
+        command
+        0 : forward
+        1 : reverse
+        2 : turn
+        3 : eat
+        4 : leave pheromone
+        5 : pick up
+        6 : drop
+
+
+        first check for his mission -> if has food go home, if no food go to food
+        if no mission follow pheromone trail the more pheromone the more likely to follow that trail
+        if no pheromone trail move randomly with bias to go up
+
+        tuple.Cells[i].getPheromone()
+        [To food, To home, Home, Food, Danger,Help me]
+        if pheromone[0] > 0
+            move towards food
+        if pheromone[1] > 0
+            move towards home
+
+         */
+
         int[] boundary = boundaryCheck(inputData);
         int step_size = 10;
-        if(boundary[1] == 1 && boundary[0] == 1) {
+        if (boundary[1] == 1 && boundary[0] == 1) {
             System.out.println("Boundary detected");
-//            if(facing == 2 && state == State.SEARCHING) {
-//                result.add(new AITuple("actuator", "#TURN", 180));
-//                updateFacing(180);
-//            }else if(facing == 0 && state == State.RETURNING){
-//                result.add(new AITuple("actuator", "#TURN", 180));
-//                updateFacing(180);
-//            }else{
+
             System.out.println("North boundary");
+            // TURN LEFT OR RIGHT, 90 or 270 since it only detects the front boundary
+            // GET AWAY FROM THE BOUNDARY
+            // first turn 180 then walk forward to get away from the boundary then turn 90 or 270
+
+
             int turnDegree = random.nextBoolean() ? 90 : 270;
             result.add(new AITuple("actuator", "#TURN", 180));
             updateFacing(180);
@@ -60,11 +100,7 @@ public class AISometimesRandom implements AIProcedure {
             result.add(new AITuple("actuator", "#FORWARD", step_size));
 
 
-            // GET AWAY FROM THE BOUNDARY
-                /*
-                first turn 180 then walk forward to get away from the boundary then turn 90 or 270
-                 */
-//            }
+
             return result;
         }
         // New: print pheromone mapping from first sensor tuple (if exists)
@@ -99,6 +135,7 @@ public class AISometimesRandom implements AIProcedure {
         double pFollow = 0.2;
         int maxPheroCell = -1;
         int maxPheroVal = 0;
+
         // Select desired pheromone types based on ant state.
         main.PheromoneType desired1, desired2;
         if(state == State.SEARCHING) {
@@ -123,9 +160,19 @@ public class AISometimesRandom implements AIProcedure {
                         maxPheroCell = cellIndex;
                     }
                 }
+            }else if(tuple.category.equals("Info")){
+                if(tuple.tag.equals("Energy")){
+                    if(tuple.iValue < 1000 && tuple.bValue){
+                        result.add(new AITuple("actuator", "#DROP", 1));
+                        result.add(new AITuple("actuator", "#EAT",1));
+                        state = State.SEARCHING;
+                    }
+                }
             }
+
         }
-        if(counter > 1000) {
+        // If counter exceeds threshold, start following pheromone
+        if(counter > 500) {
             System.out.println("Counter reset");
             double chance = random.nextDouble();
             if(maxPheroCell != -1 && chance > pFollow) {
@@ -134,12 +181,13 @@ public class AISometimesRandom implements AIProcedure {
                 if (maxPheroCell == 1) { // forward cell
                     result.add(new AITuple("actuator", "#FORWARD", step_size));
                 } else {
-                    // Turn left if cell index 0; right if cell index 2 (adjust as needed for side cells).
+                    // Turn left if cell index 0; right if cell index 2
                     int turnDegree = (maxPheroCell == 0) ? 270 : 90;
                     result.add(new AITuple("actuator", "#TURN", turnDegree));
                     updateFacing(turnDegree);
                     result.add(new AITuple("actuator", "#FORWARD", step_size));
                 }
+                // adding randomness
             } else {
                 result.addAll(randomMovement());
                 if (state == State.SEARCHING) {
@@ -162,7 +210,7 @@ public class AISometimesRandom implements AIProcedure {
         }
         return result;
     }
-
+    // check for boundary using sensor color signature black
     private int[] boundaryCheck(ArrayList<AITuple> inputData) {
         for (AITuple tuple: inputData) {
             if (tuple.category.equals("sensor")) {
@@ -178,7 +226,7 @@ public class AISometimesRandom implements AIProcedure {
         }
         return new int[]{-1, 0};
     }
-
+    // Check for food using sensor color signature green
     public int[] foodCheck(ArrayList<AITuple> inputData) {
         for (AITuple tuple: inputData) {
             if (tuple.category.equals("sensor")) {
@@ -194,9 +242,7 @@ public class AISometimesRandom implements AIProcedure {
         }
         return new int[]{-1, 0};
     }
-
-
-
+    // Check for nest using sensor color signature RED
     public int[] nestCheck(ArrayList<AITuple> inputData) {
         for (AITuple tuple: inputData) {
             if (tuple.category.equals("sensor")) {
@@ -212,7 +258,7 @@ public class AISometimesRandom implements AIProcedure {
         return new int[]{-1, 0};
     }
 
-    // New randomMovement function with north (SEARCHING) and south (RETURNING) heuristic
+    // randomMovement function with north (SEARCHING) and south (RETURNING) heuristic
     private ArrayList<AITuple> randomMovement() {
         ArrayList<AITuple> result = new ArrayList<>();
         int step_size = 10;
@@ -243,7 +289,7 @@ public class AISometimesRandom implements AIProcedure {
         return result;
     }
 
-    // New function to get all pheromone types and their values for each cell (indexed by cell position)
+    // get all pheromone types and their values for each cell (indexed by cell position)
     private Map<Integer, Map<main.PheromoneType, Integer>> getAllPheromones(main.Cell[] cells) {
         Map<Integer, Map<main.PheromoneType, Integer>> result = new HashMap<>();
 
@@ -260,13 +306,15 @@ public class AISometimesRandom implements AIProcedure {
         return result;
     }
 
-    // Supports only: 0: North, 1: East, 2: South, 3: West (0°, 90°, 180°, 270°)
+    // 0: North, 1: East, 2: South, 3: West (0°, 90°, 180°, 270°)
     private void updateFacing(int turnDegree) {
         if(turnDegree < 0)
             turnDegree = 360 + turnDegree;
         int turns = (turnDegree / 90) % 4;
         facing = (facing + turns) % 4;
     }
+
+
 
 
 }

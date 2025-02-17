@@ -54,7 +54,7 @@ ant= name30 170 370 1 1 north sometimesRandom
 ant= name31 170 370 1 1 north sometimesRandom
 
 # ********************* Foods *****************************************
-food= food1 220 25 30 10
+food= food1 220 35 30 10
 # ********************* Home *****************************************
 home= home1 180 360 100 15
 
@@ -65,7 +65,7 @@ home= home1 180 360 100 15
 
 # Boundary walls
 object= rect 0 0 20 400  # Left boundary
-object= rect 0 0 500 20  # Top boundary
+object= rect 0 0 500 30  # Top boundary
 object= rect 0 380 500 20  # Bottom boundary
 object= rect 480 0 20 400  # Right boundary
 
