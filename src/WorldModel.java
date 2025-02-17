@@ -316,6 +316,12 @@ public class WorldModel {
                 o.xCoord = xNext;
                 o.yCoord = yNext;
             }
+            if (!isColorEqual(this.model[xNext][yNext].getColor(), Color.BLACK)) {
+                o.xCoord = xNext;
+                o.yCoord = yNext;
+            } else{
+                break;
+            }
         }
         o.ant.drainBattery(energyCost);
     }

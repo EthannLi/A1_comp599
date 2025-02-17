@@ -8,7 +8,7 @@
 # displayInteraction=   displays the simulator loop count to stdout
 # ***********************************************************************
 
-delay= 500
+delay= 100
 maxIteration= 50000
 maxHeight= 500
 maxWidth= 1000
@@ -52,30 +52,9 @@ ant= name28 170 370 1 1 north sometimesRandom
 ant= name29 170 370 1 1 north sometimesRandom
 ant= name30 170 370 1 1 north sometimesRandom
 ant= name31 170 370 1 1 north sometimesRandom
-ant= name32 170 370 1 1 north sometimesRandom
-ant= name33 170 370 1 1 north sometimesRandom
-ant= name34 170 370 1 1 north sometimesRandom
-ant= name35 170 370 1 1 north sometimesRandom
-ant= name36 170 370 1 1 north sometimesRandom
-ant= name37 170 370 1 1 north sometimesRandom
-ant= name38 170 370 1 1 north sometimesRandom
-ant= name39 170 370 1 1 north sometimesRandom
-ant= name40 170 370 1 1 north sometimesRandom
-ant= name41 170 370 1 1 north sometimesRandom
-ant= name42 170 370 1 1 north sometimesRandom
-ant= name43 170 370 1 1 north sometimesRandom
-ant= name44 170 370 1 1 north sometimesRandom
-ant= name45 170 370 1 1 north sometimesRandom
-ant= name46 170 370 1 1 north sometimesRandom
-ant= name47 170 370 1 1 north sometimesRandom
-ant= name48 170 370 1 1 north sometimesRandom
-ant= name49 170 370 1 1 north sometimesRandom
-ant= name50 170 370 1 1 north sometimesRandom
-
 
 # ********************* Foods *****************************************
-food= food1 230 60 2 150
-
+food= food1 220 25 30 10
 # ********************* Home *****************************************
 home= home1 180 360 100 15
 
